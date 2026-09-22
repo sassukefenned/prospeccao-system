@@ -8,7 +8,7 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/gofiber/fiber/v3"
+	"github.com/gofiber/fiber/v2"
 )
 
 // ===== LEADS =====
@@ -34,7 +34,7 @@ func handleGetLeads(c fiber.Ctx) error {
 
 func handleCreateLead(c fiber.Ctx) error {
 	lead := new(Lead)
-	if err := c.BindJSON(lead); err != nil {
+	if err := json.Unmarshal(c.Body(), lead); err != nil {
 		return c.Status(400).JSON(fiber.Map{"erro": err.Error()})
 	}
 
@@ -52,7 +52,7 @@ func handleCreateLead(c fiber.Ctx) error {
 func handleUpdateLead(c fiber.Ctx) error {
 	id := c.Params("id")
 	lead := new(Lead)
-	if err := c.BindJSON(lead); err != nil {
+	if err := json.Unmarshal(c.Body(), lead); err != nil {
 		return c.Status(400).JSON(fiber.Map{"erro": err.Error()})
 	}
 
@@ -81,7 +81,7 @@ func handleNewSearch(c fiber.Ctx) error {
 		Categoria string `json:"categoria"`
 	}{}
 
-	if err := c.BindJSON(&req); err != nil {
+	if err := json.Unmarshal(c.Body(), &req); err != nil {
 		return c.Status(400).JSON(fiber.Map{"erro": err.Error()})
 	}
 
@@ -130,7 +130,7 @@ func handleListSearches(c fiber.Ctx) error {
 
 func handleCreateCampaign(c fiber.Ctx) error {
 	campaign := new(Campaign)
-	if err := c.BindJSON(campaign); err != nil {
+	if err := json.Unmarshal(c.Body(), campaign); err != nil {
 		return c.Status(400).JSON(fiber.Map{"erro": err.Error()})
 	}
 

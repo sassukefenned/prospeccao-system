@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/gofrs/uuid/v5"
+	"github.com/google/uuid"
 	_ "github.com/mattn/go-sqlite3"
 )
 
@@ -97,7 +97,7 @@ func (db *Database) Init() error {
 // ===== LEADS =====
 
 func (db *Database) CreateLead(lead *Lead) error {
-	lead.ID = uuid.Must(uuid.NewV4()).String()
+	lead.ID = uuid.New().String()
 	lead.CriadoEm = time.Now()
 	lead.AtualizadoEm = time.Now()
 
@@ -207,7 +207,7 @@ func (db *Database) DeleteLead(id string) error {
 // ===== SEARCHES =====
 
 func (db *Database) CreateSearch(search *Search) error {
-	search.ID = uuid.Must(uuid.NewV4()).String()
+	search.ID = uuid.New().String()
 
 	query := `INSERT INTO buscas (id, termo, categoria, data_execucao, total_resultados, 
 	leads_qualificados, arquivo_raw, status, erro)
@@ -259,7 +259,7 @@ func (db *Database) ListSearches() ([]Search, error) {
 // ===== CAMPAIGNS =====
 
 func (db *Database) CreateCampaign(campaign *Campaign) error {
-	campaign.ID = uuid.Must(uuid.NewV4()).String()
+	campaign.ID = uuid.New().String()
 	campaign.CriadoEm = time.Now()
 
 	query := `INSERT INTO campanhas (id, nome, descricao, tipo, data_inicio, data_fim, 
