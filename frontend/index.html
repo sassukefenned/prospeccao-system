@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prospectação - Sistema de Leads</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+    <nav class="navbar navbar-dark bg-dark">
+        <div class="container-fluid">
+            <span class="navbar-brand mb-0 h1">🎯 Sistema de Prospectação</span>
+            <div class="d-flex gap-2">
+                <span class="text-light small">📧 stfenned@gmail.com | 📱 +55 62 8178-9507</span>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid mt-4">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-md-2">
+                <div class="list-group">
+                    <a href="#" class="list-group-item list-group-item-action active" onclick="showTab('dashboard')">📊 Dashboard</a>
+                    <a href="#" class="list-group-item list-group-item-action" onclick="showTab('search')">🔍 Nova Busca</a>
+                    <a href="#" class="list-group-item list-group-item-action" onclick="showTab('leads')">📋 Leads</a>
+                    <a href="#" class="list-group-item list-group-item-action" onclick="showTab('campaigns')">📌 Campanhas</a>
+                    <a href="#" class="list-group-item list-group-item-action" onclick="showTab('export')">📥 Exportar</a>
+                </div>
+            </div>
+
+            <!-- Main Content -->
+            <div class="col-md-10">
+
+                <!-- Dashboard Tab -->
+                <div id="dashboard" class="tab-content">
+                    <h2>📊 Dashboard</h2>
+                    <div class="row mt-4">
+                        <div class="col-md-3">
+                            <div class="card bg-primary text-white">
+                                <div class="card-body">
+                                    <h5 class="card-title">Total de Leads</h5>
+                                    <h2 id="statTotalLeads">0</h2>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card bg-success text-white">
+                                <div class="card-body">
+                                    <h5 class="card-title">Leads Altos</h5>
+                                    <h2 id="statLeadsAltos">0</h2>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card bg-warning text-white">
+                                <div class="card-body">
+                                    <h5 class="card-title">Leads Médios</h5>
+                                    <h2 id="statLeadsMedios">0</h2>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card bg-danger text-white">
+                                <div class="card-body">
+                                    <h5 class="card-title">Leads Baixos</h5>
+                                    <h2 id="statLeadsBaixos">0</h2>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mt-4">
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h5>Campanhas</h5>
+                                    <h2 id="statCampanhas">0</h2>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h5>Taxa de Conversão</h5>
+                                    <h2 id="statTaxaConversao">0%</h2>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Nova Busca Tab -->
+                <div id="search" class="tab-content" style="display:none;">
+                    <h2>🔍 Nova Busca</h2>
+                    <div class="card mt-4">
+                        <div class="card-body">
+                            <form id="formBusca" onsubmit="executarBusca(event)">
+                                <div class="mb-3">
+                                    <label class="form-label">Termo de Busca</label>
+                                    <input type="text" class="form-control" id="termoBusca" placeholder="Ex: distribuidora Goiânia" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Categoria (opcional)</label>
+                                    <select class="form-select" id="categoriaBusca">
+                                        <option value="">-- Selecione --</option>
+                                        <option value="distribuidora">Distribuidora</option>
+                                        <option value="varejista">Varejista</option>
+                                        <option value="ecommerce">E-commerce</option>
+                                        <option value="consultor">Consultor</option>
+                                    </select>
+                                </div>
+                                <button type="submit" class="btn btn-primary">🚀 Iniciar Busca</button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <div id="resultadoBusca" style="display:none;" class="alert alert-info mt-4"></div>
+                </div>
+
+                <!-- Leads Tab -->
+                <div id="leads" class="tab-content" style="display:none;">
+                    <h2>📋 Leads</h2>
+                    <div class="row mt-3 mb-3">
+                        <div class="col-md-3">
+                            <input type="text" class="form-control" id="filtroNome" placeholder="Filtrar por nome..." onchange="carregarLeads()">
+                        </div>
+                        <div class="col-md-3">
+                            <select class="form-select" id="filtroStatus" onchange="carregarLeads()">
+                                <option value="">Todos os Status</option>
+                                <option value="novo">Novo</option>
+                                <option value="contato">Contato</option>
+                                <option value="conversao">Conversão</option>
+                                <option value="perdido">Perdido</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <select class="form-select" id="filtroQualidade" onchange="carregarLeads()">
+                                <option value="">Todas as Qualidades</option>
+                                <option value="high">Alta</option>
+                                <option value="medium">Média</option>
+                                <option value="low">Baixa</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <table class="table table-striped" id="tabelaLeads">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>Nome</th>
+                                <th>Telefone</th>
+                                <th>Email</th>
+                                <th>Categoria</th>
+                                <th>Qualidade</th>
+                                <th>Status</th>
+                                <th>Perfil</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="bodyLeads">
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Campanhas Tab -->
+                <div id="campaigns" class="tab-content" style="display:none;">
+                    <h2>📌 Campanhas</h2>
+                    <button class="btn btn-primary mb-3" onclick="abrirFormCampanha()">➕ Nova Campanha</button>
+
+                    <div id="formCampanhaDiv" class="card mb-4" style="display:none;">
+                        <div class="card-body">
+                            <form onsubmit="salvarCampanha(event)">
+                                <div class="mb-3">
+                                    <label class="form-label">Nome</label>
+                                    <input type="text" class="form-control" id="nomeCampanha" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Tipo</label>
+                                    <select class="form-select" id="tipoCampanha" required>
+                                        <option value="distribuidora">Distribuidora</option>
+                                        <option value="varejista">Varejista</option>
+                                        <option value="ecommerce">E-commerce</option>
+                                    </select>
+                                </div>
+                                <button type="submit" class="btn btn-success">Salvar</button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <table class="table table-striped" id="tabelaCampanhas">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>Nome</th>
+                                <th>Tipo</th>
+                                <th>Total Leads</th>
+                                <th>Contatos</th>
+                                <th>Conversões</th>
+                                <th>Taxa</th>
+                            </tr>
+                        </thead>
+                        <tbody id="bodyCampanhas">
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Export Tab -->
+                <div id="export" class="tab-content" style="display:none;">
+                    <h2>📥 Exportar Leads</h2>
+                    <div class="row mt-4">
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h5>📊 Exportar como CSV</h5>
+                                    <p class="text-muted small">Arquivo Excel compatível</p>
+                                    <button class="btn btn-success" onclick="exportarCSV()">Download CSV</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h5>📋 Exportar como JSON</h5>
+                                    <p class="text-muted small">Com contatos inclusos</p>
+                                    <button class="btn btn-info" onclick="exportarJSON()">Download JSON</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/app.js"></script>
+</body>
+</html>
